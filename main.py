@@ -54,6 +54,23 @@ def main():
         st.session_state['note'] = note
         if st.button("Save"):
             save_note()
+        
+        # File upload section
+        uploaded_file = st.file_uploader("Upload a file")
+        if uploaded_file:
+            uploaded_content = uploaded_file.read()
+            st.session_state['note'] = uploaded_content.decode("utf-8")
+            settings[st.session_state['name']]['note'] = st.session_state['note']
+            save_settings(settings)
+            st.success("File uploaded and note updated")
+
+        # Download button
+        st.download_button(
+            label="Download Note",
+            data=st.session_state['note'],
+            file_name=f"{st.session_state['name']}_note.txt",
+            mime="text/plain"
+        )
 
 def save_note():
     settings = load_settings()
